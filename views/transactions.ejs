@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Transactions</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Donor Name</th>
+                <th>Donation Amount</th>
+                <th>Donation Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% donations.forEach(donation => { %>
+                <tr>
+                    <td><%= donation.donorName %></td>
+                    <td><%= donation.donationAmount %></td>
+                    <td><%= donation.donationDate.toDateString() %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

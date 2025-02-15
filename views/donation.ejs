@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Page</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Donate to the Cause</h1>
+    <form action="/donations" method="POST">
+        <input type="hidden" name="referralCode" value="<%= referralCode %>">
+        <div>
+            <label for="donorName">Name:</label>
+            <input type="text" id="donorName" name="donorName" required>
+        </div>
+        <div>
+            <label for="donationAmount">Amount:</label>
+            <input type="number" id="donationAmount" name="donationAmount" required>
+        </div>
+        <button type="submit">Donate</button>
+    </form>
+</body>
+</html>
