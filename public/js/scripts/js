@@ -1,0 +1,11 @@
+function copyDonationLink() {
+    const donationLink = window.location.origin + '/donations/' + document.querySelector('p').textContent.split(' ')[2];
+    navigator.clipboard.writeText(donationLink);
+    alert('Donation link copied to clipboard!');
+}
+
+function shareOnWhatsApp() {
+    const donationLink = window.location.origin + '/donations/' + document.querySelector('p').textContent.split(' ')[2];
+    const message = `Hi, I am raising funds for NayePankh Foundation. Please support me by donating through this link ${donationLink} and make a difference!`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
