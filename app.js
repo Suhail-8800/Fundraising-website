@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const session = require("express-session");
 
-dotenv.config();
+require('dotenv').config();
 
 // ✅ CREATE APP FIRST
 const app = express();
