@@ -99,7 +99,10 @@ router.post("/login", async (req, res) => {
 
         req.session.user = user;
 
-        res.redirect("/dashboard");
+        const redirectTo = req.session.redirectTo || "/dashboard";
+        delete req.session.redirectTo;
+
+        res.redirect(redirectTo);
     } catch (err) {
         console.log(err);
         res.send("Error in login");

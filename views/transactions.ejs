@@ -5,64 +5,72 @@
     <title>Transactions</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
 
-<div class="min-h-screen p-10">
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">📄 Transactions</h1>
+    <div class="max-w-6xl mx-auto p-6">
 
-        <a href="/dashboard" 
-           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-            ⬅ Back
-        </a>
-    </div>
+        <h1 class="text-3xl font-bold mb-6">
+            💰 Donation History
+        </h1>
 
-    <!-- Table Card -->
-    <div class="bg-white rounded-xl shadow p-6">
+        <div class="bg-white rounded-xl shadow overflow-hidden">
 
-        <% if (donations.length === 0) { %>
+            <% if (donations.length === 0) { %>
 
-            <p class="text-gray-500 text-center">No donations yet.</p>
+                <div class="p-6 text-center text-gray-500">
+                    No donations yet.
+                </div>
 
-        <% } else { %>
+            <% } else { %>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left">
 
-                    <thead>
-                        <tr class="border-b bg-gray-50">
-                            <th class="p-3">Donor Name</th>
-                            <th class="p-3">Amount (₹)</th>
-                            <th class="p-3">Date</th>
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="p-4">Donor</th>
+                            <th class="p-4">Amount</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4">Payment ID</th>
                         </tr>
                     </thead>
 
                     <tbody>
+
                         <% donations.forEach(donation => { %>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="p-3 font-medium">
+                            <tr class="border-t hover:bg-gray-50">
+
+                                <td class="p-4 font-medium">
                                     <%= donation.donorName %>
                                 </td>
-                                <td class="p-3 text-green-600 font-semibold">
+
+                                <td class="p-4 text-green-600 font-semibold">
                                     ₹<%= donation.donationAmount %>
                                 </td>
-                                <td class="p-3 text-gray-500">
+
+                                <td class="p-4 text-gray-600">
                                     <%= new Date(donation.donationDate).toLocaleDateString() %>
                                 </td>
+
+                                <td class="p-4 text-sm text-gray-500">
+                                    <%= donation.paymentId || "N/A" %>
+                                </td>
+
                             </tr>
                         <% }) %>
+
                     </tbody>
 
                 </table>
-            </div>
 
-        <% } %>
+            <% } %>
+
+        </div>
 
     </div>
-
-</div>
 
 </body>
 </html>

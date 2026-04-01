@@ -2,51 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="/css/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-    <div class="container">
-        <h2>Create Your Account 🚀</h2>
+<body class="bg-gray-100">
 
-        <form method="POST" action="/signup">
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
 
-            <input type="text" name="name" placeholder="Enter your name" required />
-            <br><br>
+    <!-- Signup Card -->
+    <div class="flex items-center justify-center min-h-screen">
 
-            <input type="email" name="email" placeholder="Enter your email" required />
-            <br><br>
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
 
-            <input type="password" name="password" placeholder="Enter your password" required />
-            <br><br>
+            <h2 class="text-2xl font-bold text-center mb-6">
+                Create Account 🚀
+            </h2>
 
-            <!-- Hidden referral field -->
-            <input type="hidden" name="referral" id="referralInput" />
+            <form action="/signup" method="POST" class="space-y-4">
 
-            <button type="submit">Signup</button>
+                <input type="text" name="name" placeholder="Full Name"
+                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
-        </form>
+                <input type="email" name="email" placeholder="Email"
+                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
-        <br>
+                <input type="password" name="password" placeholder="Password"
+                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
 
-        <p>
-            Already have an account?
-            <a href="/login">Login here</a>
-        </p>
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+                    Signup
+                </button>
+
+            </form>
+
+            <p class="text-center mt-4 text-gray-600">
+                Already have an account?
+                <a href="/login" class="text-blue-600 hover:underline">Login</a>
+            </p>
+
+        </div>
+
     </div>
-
-    <script>
-        // 🔹 Capture referral from URL (?ref=abc123)
-        const params = new URLSearchParams(window.location.search);
-        const ref = params.get("ref");
-
-        if (ref) {
-            document.getElementById("referralInput").value = ref;
-        }
-    </script>
 
 </body>
 </html>

@@ -5,49 +5,65 @@
     <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100">
 
 <div class="flex min-h-screen">
 
     <!-- Sidebar -->
-    <div class="w-64 bg-white shadow-md p-5">
-        <h2 class="text-xl font-bold mb-6">Fundraiser</h2>
+    <div class="w-64 bg-gradient-to-b from-blue-600 to-indigo-700 text-white p-6">
 
-        <ul class="space-y-4">
-            <li><a href="/dashboard" class="text-blue-600 font-semibold">Dashboard</a></li>
+        <h2 class="text-2xl font-bold mb-10">Fundraiser</h2>
+
+        <ul class="space-y-5">
+            <li>
+                <a href="/dashboard" class="block hover:text-gray-200">
+                    📊 Dashboard
+                </a>
+            </li>
 
             <% if (user.referralCode) { %>
-                <li><a href="/transactions/<%= user.referralCode %>" class="text-gray-700">Transactions</a></li>
+            <li>
+                <a href="/transactions/<%= user.referralCode %>" class="block hover:text-gray-200">
+                    💰 Transactions
+                </a>
+            </li>
             <% } %>
 
-            <li><a href="/logout" class="text-red-500">Logout</a></li>
+            <li>
+                <a href="/logout" class="block text-red-200 hover:text-white">
+                    🚪 Logout
+                </a>
+            </li>
         </ul>
+
     </div>
 
     <!-- Main Content -->
     <div class="flex-1 p-10">
 
-        <h1 class="text-3xl font-bold mb-6">
+        <!-- Header -->
+        <h1 class="text-3xl font-bold mb-8">
             Welcome, <%= user.name %> 👋
         </h1>
 
         <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 
-            <div class="bg-white p-6 rounded-xl shadow">
-                <h3 class="text-gray-500">Total Donations</h3>
-                <p class="text-2xl font-bold text-green-600">₹<%= totalDonations %></p>
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg">Total Donations</h3>
+                <p class="text-3xl font-bold mt-2">₹<%= totalDonations %></p>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow">
-                <h3 class="text-gray-500">Total Donors</h3>
-                <p class="text-2xl font-bold text-blue-600"><%= totalDonors %></p>
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg">Total Donors</h3>
+                <p class="text-3xl font-bold mt-2"><%= totalDonors %></p>
             </div>
 
         </div>
 
         <!-- Referral Section -->
-        <div class="bg-white p-6 rounded-xl shadow">
+        <div class="bg-white p-6 rounded-xl shadow-lg">
 
             <% if (!user.referralCode) { %>
 
@@ -62,15 +78,18 @@
 
             <% } else { %>
 
-                <p class="mb-4">
-                    <strong>Referral Code:</strong> 
-                    <span id="referralCode"><%= user.referralCode %></span>
-                </p>
+                <h3 class="text-lg font-semibold mb-4">Your Fundraising Link</h3>
 
-                <div class="space-x-3">
+                <div class="flex items-center bg-gray-100 p-3 rounded-lg mb-4">
+                    <input id="donationLink" type="text" readonly
+                        value="<%= 'http://localhost:3000/donations/' + user.referralCode %>"
+                        class="w-full bg-transparent outline-none">
+                </div>
+
+                <div class="flex gap-3">
                     <button onclick="copyDonationLink()" 
                         class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        📋 Copy Link
+                        📋 Copy
                     </button>
 
                     <button onclick="shareOnWhatsApp()" 
@@ -93,8 +112,7 @@ function generateReferral() {
 }
 
 function getDonationLink() {
-    const code = document.getElementById("referralCode")?.innerText;
-    return `${window.location.origin}/donations/${code}`;
+    return document.getElementById("donationLink")?.value;
 }
 
 function copyDonationLink() {

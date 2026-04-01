@@ -1,7 +1,48 @@
-<h2>Login</h2>
-<form method="POST" action="/login">
-    <input type="email" name="email" placeholder="Email" required /><br>
-    <input type="password" name="password" placeholder="Password" required /><br>
-    <button type="submit">Login</button>
-</form>
-<a href="/signup">Create account</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
+
+    <!-- Login Card -->
+    <div class="flex items-center justify-center min-h-screen">
+
+        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+
+            <h2 class="text-2xl font-bold text-center mb-6">
+                Welcome Back 👋
+            </h2>
+
+            <form action="/login" method="POST" class="space-y-4">
+
+                <input type="email" name="email" placeholder="Email"
+                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+                <input type="password" name="password" placeholder="Password"
+                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+                    Login
+                </button>
+
+            </form>
+
+            <p class="text-center mt-4 text-gray-600">
+                Don't have an account?
+                <a href="/signup" class="text-blue-600 hover:underline">Signup</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
