@@ -1,24 +1,129 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Page</title>
+    <title>Donate</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Donate to the Cause</h1>
-    <form action="/donations" method="POST">
-        <input type="hidden" name="referralCode" value="<%= referralCode %>">
-        <div>
-            <label for="donorName">Name:</label>
-            <input type="text" id="donorName" name="donorName" required>
-        </div>
-        <div>
-            <label for="donationAmount">Amount:</label>
-            <input type="number" id="donationAmount" name="donationAmount" required>
-        </div>
-        <button type="submit">Donate</button>
-    </form>
+
+    <div class="container">
+        <h1>❤️ Support This Fundraiser</h1>
+
+        <form action="/donations" method="POST">
+
+            <input type="hidden" name="referralCode" value="<%= referralCode %>">
+
+            <div>
+                <label>Your Name</label><br>
+                <input type="text" name="donorName" placeholder="Enter your name" required>
+            </div>
+
+            <br>
+
+            <div>
+                <label>Donation Amount (₹)</label><br>
+                <input type="number" name="donationAmount" placeholder="Enter amount" required>
+            </div>
+
+            <br>
+
+            <button type="submit">💖 Donate Now</button>
+
+        </form>
+    </div>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donate</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="bg-white p-8 rounded-xl shadow w-96">
+
+    <h1 class="text-2xl font-bold mb-6 text-center">❤️ Donate</h1>
+
+    <input id="name" type="text" placeholder="Your Name"
+        class="w-full mb-4 p-2 border rounded">
+
+    <input id="amount" type="number" placeholder="Amount (₹)"
+        class="w-full mb-4 p-2 border rounded">
+
+    <button onclick="payNow()" 
+        class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        💳 Donate Now
+    </button>
+
+</div>
+
+<script>
+window.payNow = async function () {
+    console.log("Clicked"); // debug
+
+    const name = document.getElementById("name").value;
+    const amount = document.getElementById("amount").value;
+
+    if (!name || !amount) {
+        alert("Fill all fields");
+        return;
+    }
+
+    try {
+        // Step 1: Create order
+        const res = await fetch("/donations/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount })
+        });
+
+        const order = await res.json();
+
+        // Step 2: Razorpay popup
+        const options = {
+            key: "<%= key %>",
+            amount: order.amount,
+            currency: "INR",
+            name: "Fundraiser",
+            description: "Donation",
+            order_id: order.id,
+
+            handler: async function (response) {
+                await fetch("/donations/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        donorName: name,
+                        donationAmount: amount,
+                        referralCode: "<%= referralCode %>",
+                        paymentId: response.razorpay_payment_id
+                    })
+                });
+
+                alert("Payment Successful 🎉");
+
+                window.location.href = `/transactions/<%= referralCode %>`;
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong");
+    }
+}
+</script>
+
 </body>
 </html>

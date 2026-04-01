@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Create Your Account 🚀</h2>
+
+        <form method="POST" action="/signup">
+
+            <input type="text" name="name" placeholder="Enter your name" required />
+            <br><br>
+
+            <input type="email" name="email" placeholder="Enter your email" required />
+            <br><br>
+
+            <input type="password" name="password" placeholder="Enter your password" required />
+            <br><br>
+
+            <!-- Hidden referral field -->
+            <input type="hidden" name="referral" id="referralInput" />
+
+            <button type="submit">Signup</button>
+
+        </form>
+
+        <br>
+
+        <p>
+            Already have an account?
+            <a href="/login">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        // 🔹 Capture referral from URL (?ref=abc123)
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get("ref");
+
+        if (ref) {
+            document.getElementById("referralInput").value = ref;
+        }
+    </script>
+
+</body>
+</html>
