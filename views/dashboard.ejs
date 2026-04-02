@@ -78,24 +78,22 @@
 
             <% } else { %>
 
-                <h3 class="text-lg font-semibold mb-4">Your Fundraising Link</h3>
+                <h3 class="text-lg font-semibold mb-6">Support Your Campaign</h3>
 
-                <div class="flex items-center bg-gray-100 p-3 rounded-lg mb-4">
-                    <input id="donationLink" type="text" readonly
-                        value="<%= referralLink %>"
-                        class="w-full bg-transparent outline-none">
-                </div>
+                <div class="flex gap-4">
 
-                <div class="flex gap-3">
-                    <button onclick="copyDonationLink()" 
-                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        📋 Copy
+                    <!-- 💰 DONATE BUTTON -->
+                    <button onclick="openDonation()" 
+                        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 text-lg">
+                        💳 Donate Now
                     </button>
 
+                    <!-- 📲 WHATSAPP -->
                     <button onclick="shareOnWhatsApp()" 
-                        class="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600">
-                        📲 WhatsApp
+                        class="bg-emerald-500 text-white px-5 py-3 rounded-lg hover:bg-emerald-600">
+                        📲 Share
                     </button>
+
                 </div>
 
             <% } %>
@@ -124,6 +122,21 @@ function copyDonationLink() {
 function shareOnWhatsApp() {
     const link = getDonationLink();
     window.open(`https://wa.me/?text=${encodeURIComponent(link)}`);
+}
+
+function generateReferral() {
+    window.location.href = "/generate-referral";
+}
+
+function shareOnWhatsApp() {
+    const link = "<%= referralLink %>";
+    window.open(`https://wa.me/?text=${encodeURIComponent(link)}`);
+}
+
+// 💥 OPEN DONATION PAGE (TRIGGERS RAZORPAY)
+function openDonation() {
+    const link = "<%= referralLink %>";
+    window.location.href = link;
 }
 </script>
 
