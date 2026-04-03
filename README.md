@@ -172,14 +172,6 @@ Can be deployed on:
 
 ---
 
-## 📸 Screenshots
-
-* Dashboard with total donations
-* Referral link generation
-* Razorpay payment integration
-
----
-
 ## 🧠 Learning Outcomes
 
 * Full-stack web development
