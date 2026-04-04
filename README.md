@@ -8,8 +8,9 @@ A full-stack **Fundraising Platform** that allows users to create personalized d
 
 This project enables users to:
 
+* Supports multi user
 * Generate a unique fundraising link
-* Share it with others (WhatsApp / direct link)
+* Share it with others (WhatsApp)
 * Accept secure payments via Razorpay
 * Track total donations and donors in a dashboard
 
