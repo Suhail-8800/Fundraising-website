@@ -51,32 +51,7 @@ router.post("/signup", async (req, res) => {
     }
 });
 
-// 🔹 Generate Referral Code ONLY when user wants to share
-router.get("/generate-referral", async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect("/login");
-    }
-
-    try {
-        let user = await User.findById(req.session.user._id);
-
-        // Generate only if not exists
-        if (!user.referralCode) {
-            const referralCode = generateReferralCode(user.name);
-            user.referralCode = referralCode;
-            await user.save();
-        }
-
-        // Update session
-        req.session.user = user;
-
-        res.redirect("/dashboard");
-
-    } catch (err) {
-        console.log(err);
-        res.send("Error generating referral");
-    }
-});
+// Legacy referral generation removed, replaced by Campaign creation
 
 // 🔹 Login
 router.get("/login", (req, res) => {

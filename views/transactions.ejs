@@ -40,6 +40,7 @@
                             <tr>
                                 <th class="p-5 font-semibold">Donor</th>
                                 <th class="p-5 font-semibold">Amount</th>
+                                <th class="p-5 font-semibold">Campaign</th>
                                 <th class="p-5 font-semibold">Date</th>
                                 <th class="p-5 font-semibold">Payment ID</th>
                                 <th class="p-5 font-semibold">Status</th>
@@ -59,6 +60,11 @@
                                     </td>
                                     <td class="p-5">
                                         <span class="text-green-600 dark:text-green-400 font-bold text-lg">₹<%= donation.donationAmount %></span>
+                                    </td>
+                                    <td class="p-5">
+                                        <span class="text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md">
+                                            <%= donation.campaignId ? donation.campaignId.title : 'Legacy' %>
+                                        </span>
                                     </td>
                                     <td class="p-5 text-gray-500 dark:text-gray-400">
                                         <%= new Date(donation.donationDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>

@@ -28,12 +28,16 @@ const authRoutes = require("./routes/auth");
 const dashboardRoutes = require('./routes/dashboard');
 const donationRoutes = require('./routes/donations');
 const transactionRoutes = require('./routes/transactions');
+const campaignRoutes = require('./routes/campaigns');
+const publicCampaignRoutes = require('./routes/publicCampaign');
 
 // ✅ ROUTES USE
 app.use("/", authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/donations', donationRoutes);
 app.use('/transactions', transactionRoutes);
+app.use('/campaigns', campaignRoutes);
+app.use('/c', publicCampaignRoutes);
 
 // ✅ HOME ROUTE
 app.get('/', (req, res) => {

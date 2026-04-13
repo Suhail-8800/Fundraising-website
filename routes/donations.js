@@ -10,23 +10,6 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-
-// 🔹 Show Donation Page (Login Required)
-router.get('/:referralCode', (req, res) => {
-
-    if (!req.session.user) {
-        req.session.redirectTo = req.originalUrl;
-        return res.redirect('/login');
-    }
-
-    res.render('donation', {
-        referralCode: req.params.referralCode,
-        key: process.env.RAZORPAY_KEY_ID,
-        user: req.session.user
-    });
-});
-
-
 // 🔹 Create Razorpay Order
 router.post('/create-order', async (req, res) => {
     try {
@@ -48,11 +31,10 @@ router.post('/create-order', async (req, res) => {
         res.json(order);
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send("Error creating order");
     }
 });
-
 
 // 🔹 Verify Payment & Save Donation
 router.post('/verify', async (req, res) => {
@@ -60,20 +42,20 @@ router.post('/verify', async (req, res) => {
         const {
             donorName,
             donationAmount,
-            referralCode,
+            campaignId,
+            message,
             paymentId,
             orderId,
             signature
         } = req.body;
 
-        // 🔒 Validate all fields
-        if (!donorName || !donationAmount || !referralCode || !paymentId || !orderId || !signature) {
+        // 🔒 Validate essential fields
+        if (!donorName || !donationAmount || !campaignId || !paymentId || !orderId || !signature) {
             return res.status(400).json({ success: false, message: "Missing fields" });
         }
 
         // 🔐 Generate expected signature
         const body = orderId + "|" + paymentId;
-
         const expectedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
             .update(body)
@@ -81,21 +63,21 @@ router.post('/verify', async (req, res) => {
 
         // ❌ If signature invalid
         if (expectedSignature !== signature) {
-            return res.status(400).json({ success: false, message: "Invalid payment" });
+            return res.status(400).json({ success: false, message: "Invalid payment signature. Trust denied." });
         }
 
         // 🚫 Prevent duplicate entries
         const existingDonation = await Donation.findOne({ paymentId });
-
         if (existingDonation) {
             return res.json({ success: true, message: "Already recorded" });
         }
 
-        // ✅ Save donation
+        // ✅ Save donation securely
         const donation = new Donation({
             donorName,
             donationAmount,
-            referralCode,
+            campaignId,
+            message: message || "",
             paymentId
         });
 
@@ -104,10 +86,9 @@ router.post('/verify', async (req, res) => {
         res.json({ success: true });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send("Error verifying payment");
     }
 });
-
 
 module.exports = router;

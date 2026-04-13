@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Make a Donation - Fundraiser</title>
+    <title><%= campaign.title %> - Fundraiser</title>
     <%- include('partials/header_assets') %>
 </head>
 
@@ -10,141 +10,197 @@
 
     <%- include('partials/navbar') %>
 
-    <div class="flex flex-1 items-center justify-center p-6 lg:p-10 relative overflow-hidden">
+    <% const percent = Math.min(100, Math.round((totalRaised / campaign.goalAmount) * 100)) || 0; %>
+
+    <div class="flex-1 w-full max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12">
         
-        <!-- Abstract Shapes -->
-        <div class="absolute top-1/4 left-1/4 w-[50%] h-[50%] rounded-full bg-brand-500/10 blur-[120px] pointer-events-none"></div>
-
-        <div class="glass max-w-lg w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-8 md:p-10 rounded-[2rem] shadow-2xl relative z-10 animate-slide-up border border-white/50 dark:border-gray-700/50">
-
-            <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-gradient-to-tr from-brand-400 to-blue-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-500/30 transform -rotate-6">
-                    <svg class="w-10 h-10 transform rotate-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                </div>
-                <h2 class="text-3xl font-extrabold dark:text-white tracking-tight">Support This Cause</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2">Every contribution creates a massive impact.</p>
-            </div>
-
-            <!-- Form -->
-            <form id="donationForm" class="space-y-6">
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
-                    <input type="text" id="donorName" placeholder="Enter your full name"
-                        class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all font-medium text-gray-900 dark:text-white placeholder-gray-400" required>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Select Amount (₹)</label>
-                    
-                    <!-- Predefined amounts -->
-                    <div class="grid grid-cols-3 gap-3 mb-4">
-                        <button type="button" onclick="setAmount(100)" class="py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all hover:shadow-md">₹100</button>
-                        <button type="button" onclick="setAmount(500)" class="py-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-xl font-bold text-brand-600 dark:text-brand-400 hover:border-brand-500 transition-all shadow-sm">₹500</button>
-                        <button type="button" onclick="setAmount(1000)" class="py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all hover:shadow-md">₹1000</button>
+        <!-- Left: Campaign Info & Wall of Support -->
+        <div class="flex-1 space-y-8 animate-fade-in">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="px-3 py-1 bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300 rounded-lg text-sm font-bold uppercase tracking-wider mb-4 inline-block">Campaign</span>
+                <h1 class="text-4xl font-extrabold dark:text-white mb-4 leading-tight"><%= campaign.title %></h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 whitespace-pre-line"><%= campaign.description %></p>
+                
+                <div class="bg-gray-50 dark:bg-gray-900 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+                    <div class="flex justify-between items-end mb-2">
+                        <div>
+                            <span class="text-3xl font-extrabold dark:text-white">₹<%= totalRaised %></span>
+                            <span class="text-gray-500 dark:text-gray-400 font-medium">raised of ₹<%= campaign.goalAmount %> goal</span>
+                        </div>
+                        <span class="text-xl font-bold text-brand-600 dark:text-brand-400"><%= percent %>%</span>
                     </div>
-
-                    <div class="relative flex items-center">
-                        <span class="absolute left-5 font-bold text-gray-400 dark:text-gray-500 text-xl">₹</span>
-                        <input type="number" id="amount" placeholder="Other amount" value="500"
-                            class="w-full bg-gray-50/50 dark:bg-gray-900/50 border-2 border-gray-200 dark:border-gray-700 rounded-xl pl-10 pr-5 py-4 text-xl font-bold focus:outline-none focus:border-brand-500 focus:ring-0 transition-all text-gray-900 dark:text-white" required>
+                    <div class="h-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+                        <div class="h-full bg-brand-500 rounded-full" style="width: <%= percent %>%"></div>
                     </div>
-                </div>
-
-                <div class="pt-4">
-                    <button type="button" onclick="payNow()"
-                        class="w-full bg-gray-900 dark:bg-brand-500 text-white py-4 rounded-xl hover:bg-gray-800 dark:hover:bg-brand-400 transition-all text-lg font-bold flex items-center justify-center gap-2 shadow-xl shadow-gray-900/20 dark:shadow-brand-500/20 transform hover:-translate-y-1">
-                        <svg class="w-5 h-5 text-brand-400 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                        Donate Securely
-                    </button>
-                </div>
-
-            </form>
-
-            <!-- Trust Section -->
-            <div class="mt-8 flex flex-col items-center gap-3 border-t border-gray-100 dark:border-gray-700 pt-6">
-                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-medium">
-                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    256-bit secure checkout
-                </div>
-                <div class="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-                    <span class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">Powered By</span>
-                    <span class="font-bold text-gray-800 dark:text-white text-lg">Razorpay</span>
+                    <div class="text-sm font-semibold text-gray-500 dark:text-gray-400">
+                        <%= totalDonors %> generous donors have contributed
+                    </div>
                 </div>
             </div>
 
+            <!-- Wall of Support -->
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <h3 class="text-2xl font-bold dark:text-white mb-6 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-brand-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path></svg>
+                    Wall of Support
+                </h3>
+
+                <% if (recentDonations && recentDonations.length > 0) { %>
+                    <div class="space-y-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+                        <% recentDonations.forEach(donation => { %>
+                            <div class="flex gap-4 border-b border-gray-100 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-100 to-blue-100 dark:from-brand-900/40 dark:to-blue-900/40 flex items-center justify-center text-brand-600 dark:text-brand-300 font-bold text-lg flex-shrink-0 shadow-inner">
+                                    <%= donation.donorName.charAt(0) %>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-baseline mb-1">
+                                        <h4 class="font-bold dark:text-white text-lg"><%= donation.donorName %></h4>
+                                        <span class="font-extrabold text-green-600 dark:text-green-400">₹<%= donation.donationAmount %></span>
+                                    </div>
+                                    <% if (donation.message) { %>
+                                        <p class="text-gray-600 dark:text-gray-300 italic bg-gray-50 dark:bg-gray-900/50 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-sm">"<%= donation.message %>"</p>
+                                    <% } %>
+                                    <span class="text-xs text-gray-400 mt-2 block"><%= new Date(donation.donationDate).toLocaleDateString() %></span>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-10 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-500 dark:text-gray-400 font-medium">Be the first to support this campaign!</p>
+                    </div>
+                <% } %>
+            </div>
         </div>
 
+        <!-- Right: Donation Form Widget -->
+        <div class="w-full lg:w-[450px] flex-shrink-0 animate-slide-up" style="animation-delay: 0.1s">
+            <div class="glass bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-white/50 dark:border-gray-700/50 sticky top-24">
+                
+                <h2 class="text-2xl font-extrabold dark:text-white mb-6">Make a Donation</h2>
+
+                <form id="donationForm" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
+                        <input type="text" id="donorName" placeholder="Enter your full name"
+                            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-500 text-gray-900 dark:text-white focus:outline-none" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Amount (₹)</label>
+                        <div class="grid grid-cols-3 gap-3 mb-3">
+                            <button type="button" onclick="setAmount(500)" class="py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all focus:border-brand-500">₹500</button>
+                            <button type="button" onclick="setAmount(1000)" class="py-2.5 bg-brand-50 dark:bg-brand-900/20 border-2 border-brand-300 dark:border-brand-700 rounded-xl font-bold text-brand-700 dark:text-brand-400 transition-all shadow-sm">₹1000</button>
+                            <button type="button" onclick="setAmount(5000)" class="py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all focus:border-brand-500">₹5000</button>
+                        </div>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-5 font-bold text-gray-400 dark:text-gray-500 text-xl">₹</span>
+                            <input type="number" id="amount" placeholder="Other amount" value="1000"
+                                class="w-full bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 rounded-xl pl-10 pr-5 py-3.5 text-xl font-bold focus:border-brand-500 focus:outline-none transition-all text-gray-900 dark:text-white shadow-inner" required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Message of Support (Optional)</label>
+                        <textarea id="message" rows="2" placeholder="Leave a nice message for the campaign owner"
+                            class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-brand-500 text-gray-900 dark:text-white focus:outline-none resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="button" onclick="payNow()"
+                            class="w-full bg-gray-900 dark:bg-brand-500 text-white py-4 rounded-xl hover:bg-gray-800 dark:hover:bg-brand-400 transition-all text-lg font-bold flex items-center justify-center gap-2 shadow-xl shadow-gray-900/20 transform hover:-translate-y-0.5">
+                            <svg class="w-5 h-5 text-brand-400 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                            Donate Securely
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 flex flex-col items-center gap-2 border-t border-gray-100 dark:border-gray-700 pt-5">
+                    <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                        256-bit secure checkout
+                    </div>
+                    <div class="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                        <span class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">Powered By</span>
+                        <span class="font-bold text-gray-800 dark:text-white">Razorpay</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-    <!-- UI Helper Script -->
+    <!-- Script for UI and Razorpay -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script>
         function setAmount(val) {
             document.getElementById('amount').value = val;
         }
-    </script>
 
-    <!-- Razorpay Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <script>
         async function payNow() {
-
             const donorName = document.getElementById("donorName").value;
             const amount = document.getElementById("amount").value;
+            const message = document.getElementById("message").value;
 
             if (!donorName || !amount) {
-                alert("Please fill all fields");
+                alert("Please fill all required fields");
                 return;
             }
 
             // Create order
             const res = await fetch("/donations/create-order", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ amount })
             });
 
             const order = await res.json();
 
+            if (!order || order.error) {
+                alert("Payment initiation failed.");
+                return;
+            }
+
             const options = {
                 key: "<%= key %>",
                 amount: order.amount,
                 currency: "INR",
-                name: "Fundraiser",
-                description: "Donation",
+                name: "Fundraiser - <%= campaign.title %>",
+                description: "Campaign Donation",
                 order_id: order.id,
 
                 handler: async function (response) {
-
-                    await fetch("/donations/verify", {
+                    const verifyRes = await fetch("/donations/verify", {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             donorName,
                             donationAmount: amount,
-                            referralCode: "<%= referralCode %>",
+                            campaignId: "<%= campaign._id %>",
+                            message: message,
                             paymentId: response.razorpay_payment_id,
                             orderId: response.razorpay_order_id,
                             signature: response.razorpay_signature
                         })
                     });
 
-                    // Modern Toast Alert
-                    alert("Payment Successful 🎉");
-                    window.location.reload();
+                    const verifyData = await verifyRes.json();
+                    
+                    if (verifyData.success) {
+                        alert("Payment Successful 🎉 Thank you for your support!");
+                        window.location.reload();
+                    } else {
+                        alert("Payment verification failed! " + (verifyData.message || ""));
+                    }
                 },
-
-                theme: {
-                    color: "#0d9488"
-                }
+                theme: { color: "#0d9488" }
             };
 
             const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (response){
+                alert("Payment failed: " + response.error.description);
+            });
             rzp.open();
         }
     </script>
