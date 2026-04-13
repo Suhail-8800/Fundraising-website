@@ -140,7 +140,7 @@ Create a `.env` file at the project root containing:
 MONGO_URI=<your_mongodb_connection_string>
 RAZORPAY_KEY_ID=<your_razorpay_key_id>
 RAZORPAY_KEY_SECRET=<your_razorpay_key_secret>
-BASE_URL=http://localhost:3000
+BASE_URL=https://fundraising-website.onrender.com/
 SESSION_SECRET=<your_session_secret>
 PORT=3000
 ```
@@ -179,7 +179,7 @@ npm start
 Visit:
 
 ```text
-http://localhost:3000
+https://fundraising-website.onrender.com/
 ```
 
 ---

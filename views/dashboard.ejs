@@ -242,20 +242,38 @@ function closeCreateModal() {
 // Form Submit
 document.getElementById('createForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // UI Loader State
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
     const title = document.getElementById('c_title').value;
     const description = document.getElementById('c_desc').value;
     const goalAmount = document.getElementById('c_goal').value;
 
-    const res = await fetch('/campaigns/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, goalAmount })
-    });
-    
-    if (res.ok) {
-        window.location.reload();
-    } else {
-        alert("Failed to create campaign");
+    try {
+        const res = await fetch('/campaigns/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description, goalAmount })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            if (window.showToast) window.showToast(data.message || "Campaign created successfully!", 'success');
+            setTimeout(() => { window.location.reload(); }, 1500);
+        } else {
+            if (window.showToast) window.showToast(data.message || "Failed to create campaign", 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    } catch (err) {
+        if (window.showToast) window.showToast("Network Error", 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 });
 
@@ -273,14 +291,24 @@ async function openAnalytics(campaignId) {
 
     // Fetch Data
     document.getElementById('emptyAnalytics').classList.add('hidden');
-    const res = await fetch(`/campaigns/analytics/${campaignId}`);
-    const data = await res.json();
+    
+    try {
+        const res = await fetch(`/campaigns/analytics/${campaignId}`);
+        const result = await res.json();
 
-    if (!data || data.length === 0) {
-        document.getElementById('emptyAnalytics').classList.remove('hidden');
+        if (result.success) {
+            const data = result.analytics;
+            if (!data || data.length === 0) {
+                document.getElementById('emptyAnalytics').classList.remove('hidden');
+            }
+            renderChart(data);
+        } else {
+            if (window.showToast) window.showToast(result.message || "Failed to load analytics", 'error');
+            document.getElementById('emptyAnalytics').classList.remove('hidden');
+        }
+    } catch (err) {
+        if (window.showToast) window.showToast("Network error fetching analytics", 'error');
     }
-
-    renderChart(data);
 }
 
 function closeAnalytics() {

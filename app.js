@@ -49,6 +49,17 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
+// ✅ 404 CATCH-ALL
+app.use((req, res, next) => {
+    res.status(404).render('404', { user: req.session ? req.session.user : null });
+});
+
+// ✅ 500 GLOBAL ERROR HANDLER
+app.use((err, req, res, next) => {
+    console.error("Global Error Caught:", err.message);
+    res.status(500).render('500', { user: req.session ? req.session.user : null });
+});
+
 // ✅ SERVER START
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
