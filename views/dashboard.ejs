@@ -2,109 +2,184 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Dashboard - Fundraiser</title>
+    <%- include('partials/header_assets') %>
+    <style>
+        .sidebar { transition: transform 0.3s ease-in-out; }
+    </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 
-<div class="flex min-h-screen">
+    <%- include('partials/navbar') %>
 
-    <!-- Sidebar -->
-    <div class="w-64 bg-gradient-to-b from-blue-600 to-indigo-700 text-white p-6">
+    <div class="flex flex-1 overflow-hidden relative">
 
-        <h2 class="text-2xl font-bold mb-10">Fundraiser</h2>
+        <!-- Mobile Sidebar Overlay -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-        <ul class="space-y-5">
-            <li>
-                <a href="/dashboard" class="block hover:text-gray-200">
-                    📊 Dashboard
-                </a>
-            </li>
-
-            <% if (user.referralCode) { %>
-            <li>
-                <a href="/transactions/<%= user.referralCode %>" class="block hover:text-gray-200">
-                    💰 Transactions
-                </a>
-            </li>
-            <% } %>
-
-            <li>
-                <a href="/logout" class="block text-red-200 hover:text-white">
-                    🚪 Logout
-                </a>
-            </li>
-        </ul>
-
-    </div>
-
-    <!-- Main Content -->
-    <div class="flex-1 p-10">
-
-        <!-- Header -->
-        <h1 class="text-3xl font-bold mb-8">
-            Welcome, <%= user.name %> 👋
-        </h1>
-
-        <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-
-            <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg">
-                <h3 class="text-lg">Total Donations</h3>
-                <p class="text-3xl font-bold mt-2">₹<%= totalDonations %></p>
-            </div>
-
-            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-xl shadow-lg">
-                <h3 class="text-lg">Total Donors</h3>
-                <p class="text-3xl font-bold mt-2"><%= totalDonors %></p>
-            </div>
-
-        </div>
-
-        <!-- Referral Section -->
-        <div class="bg-white p-6 rounded-xl shadow-lg">
-
-            <% if (!user.referralCode) { %>
-
-                <p class="mb-4 text-gray-600">
-                    Start fundraising to generate your link.
-                </p>
-
-                <button onclick="generateReferral()" 
-                    class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-                    🚀 Generate Link
-                </button>
-
-            <% } else { %>
-
-                <h3 class="text-lg font-semibold mb-6">Support Your Campaign</h3>
-
-                <div class="flex gap-4">
-
-                    <!-- 💰 DONATE BUTTON -->
-                    <button onclick="openDonation()" 
-                        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 text-lg">
-                        💳 Donate Now
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 transform -translate-x-full lg:translate-x-0 lg:static lg:block drop-shadow-xl lg:drop-shadow-none">
+            
+            <div class="p-6">
+                <!-- Mobile Only Header -->
+                <div class="flex justify-between items-center mb-10 lg:hidden">
+                    <h2 class="text-xl font-bold dark:text-white">Menu</h2>
+                    <button onclick="toggleSidebar()" class="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
-
-                    <!-- 📲 WHATSAPP -->
-                    <button onclick="shareOnWhatsApp()" 
-                        class="bg-emerald-500 text-white px-5 py-3 rounded-lg hover:bg-emerald-600">
-                        📲 Share
-                    </button>
-
                 </div>
 
-            <% } %>
+                <div class="text-xs uppercase font-semibold text-gray-500 tracking-wider mb-4 hidden lg:block">Navigation</div>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 bg-brand-50 text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 rounded-xl font-medium transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                            Dashboard
+                        </a>
+                    </li>
 
-        </div>
+                    <% if (user.referralCode) { %>
+                    <li>
+                        <a href="/transactions/<%= user.referralCode %>" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50 rounded-xl font-medium transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Transactions
+                        </a>
+                    </li>
+                    <% } %>
+                </ul>
 
+                <div class="mt-8">
+                    <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl font-medium transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        Logout
+                    </a>
+                </div>
+            </div>
+            
+            <!-- User Profile Snippet in Sidebar -->
+            <div class="absolute bottom-0 w-full p-6 border-t border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-brand-400 to-blue-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+                        <%= user.name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="font-bold text-sm truncate dark:text-white"><%= user.name %></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><%= typeof user.email !== "undefined" ? user.email : "Member" %></p>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-10 overflow-y-auto animate-fade-in relative w-full">
+
+            <!-- Mobile Sidebar Toggle -->
+            <button onclick="toggleSidebar()" class="lg:hidden flex items-center gap-2 text-gray-600 dark:text-gray-300 font-medium mb-6 hover:bg-gray-200 dark:hover:bg-gray-800 p-2 rounded-lg transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                <span>Menu</span>
+            </button>
+
+            <!-- Header -->
+            <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold dark:text-white mb-2">Overview</h1>
+                    <p class="text-gray-500 dark:text-gray-400">Welcome back, <%= user.name %>! Here's what's happening with your campaign.</p>
+                </div>
+            </header>
+
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-10">
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-gray-500 dark:text-gray-400 font-medium mb-2 relative z-10">Total Donations</h3>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-3xl font-extrabold text-gray-900 dark:text-white">₹<%= totalDonations %></span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <svg class="w-16 h-16 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <h3 class="text-gray-500 dark:text-gray-400 font-medium mb-2 relative z-10">Total Donors</h3>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-3xl font-extrabold text-gray-900 dark:text-white"><%= totalDonors %></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Referral Section -->
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 animate-slide-up" style="animation-delay: 0.1s; animation-fill-mode: forwards;">
+                
+                <% if (!user.referralCode) { %>
+                    <div class="text-center py-6">
+                        <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold dark:text-white mb-2">Kickstart Your Campaign</h3>
+                        <p class="mb-6 text-gray-500 dark:text-gray-400 max-w-md mx-auto">Generate your fundraising link and start sharing it with the world instantly.</p>
+                        <button onclick="generateReferral()" class="bg-brand-600 text-white px-6 py-3 rounded-xl hover:bg-brand-700 font-semibold shadow-md shadow-brand-500/30 transition-all hover:-translate-y-0.5">
+                            Generate Link Now
+                        </button>
+                    </div>
+                <% } else { %>
+                    <div class="flex flex-col xl:flex-row gap-8 items-start xl:items-center justify-between">
+                        <div class="flex-1 w-full relative">
+                            <h3 class="text-lg font-bold mb-3 dark:text-white flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                                Your Fundraising Link
+                            </h3>
+                            
+                            <div class="flex shadow-sm rounded-xl overflow-hidden mt-2 bg-gray-50 dark:bg-gray-900 p-1 border border-gray-200 dark:border-gray-700">
+                                <input type="text" id="donationLink" value="<%= referralLink %>" readonly
+                                    class="bg-transparent flex-1 px-4 py-3 text-sm text-gray-700 dark:text-gray-200 focus:outline-none" />
+                                <button onclick="copyDonationLink()" class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 font-medium rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-2 group">
+                                    <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <!-- Toast for Copy -->
+                            <div id="copyToast" class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-full opacity-0 pointer-events-none transition-all duration-300">
+                                Copied to clipboard
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                            <!-- Donate Button -->
+                            <button onclick="openDonation()" class="flex-1 sm:flex-none justify-center bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-6 py-3.5 rounded-xl hover:bg-gray-800 dark:hover:bg-white font-semibold transition-all hover:shadow-lg flex items-center gap-2 shadow-gray-900/20">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                <span>Preview Donation</span>
+                            </button>
+
+                            <!-- WhatsApp -->
+                            <button onclick="shareOnWhatsApp()" class="flex-1 sm:flex-none justify-center bg-[#25D366] text-white px-6 py-3.5 rounded-xl hover:bg-[#20BE58] font-semibold flex items-center gap-2 transition-all hover:shadow-lg shadow-[#25D366]/30">
+                                <svg class="w-5 h-5 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 .004 5.378.004 12.029c0 2.128.552 4.195 1.6 6.02L.002 24l6.115-1.603c1.761.944 3.737 1.442 5.912 1.442 6.648 0 12.029-5.38 12.029-12.03C24.056 5.381 18.679 0 12.031 0zm0 21.84c-1.802 0-3.568-.485-5.114-1.402l-.367-.218-3.805.998.983-3.71-.239-.38C2.518 15.539 1.956 13.82 1.956 12.029c0-5.565 4.524-10.086 10.088-10.086 5.561 0 10.082 4.522 10.082 10.086 0 5.567-4.521 10.085-10.095 10.085zm5.545-7.559c-.304-.152-1.796-.884-2.073-.986-.279-.101-.482-.152-.686.152-.204.304-.783.987-.96 1.189-.178.203-.356.228-.661.076-.807-.404-1.794-.969-2.529-1.821-.219-.253-.35-.558-.35-.884 0-.308.206-.605.352-.806.146-.202.253-.304.354-.506.101-.202.05-.38-.026-.532-.075-.152-.686-1.65-.939-2.261-.247-.597-.497-.514-.686-.523h-.586c-.203 0-.532.076-.811.38-.279.304-1.066 1.042-1.066 2.538s1.091 2.894 1.244 3.097c.152.203 2.11 3.227 5.115 4.527s5.115 2.158 5.762 1.815c.645-.341 2.073-.846 2.366-1.666.292-.821.292-1.523.204-1.67-.089-.146-.318-.222-.622-.374z"></path></svg>
+                                <span>Share Campaign</span>
+                            </button>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+        </main>
     </div>
 
-</div>
-
 <script>
+// Sidebar Toggle Logic
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+}
+
 function generateReferral() {
     window.location.href = "/generate-referral";
 }
@@ -116,24 +191,23 @@ function getDonationLink() {
 function copyDonationLink() {
     const link = getDonationLink();
     navigator.clipboard.writeText(link);
-    alert("Link copied!");
-}
-
-function shareOnWhatsApp() {
-    const link = getDonationLink();
-    window.open(`https://wa.me/?text=${encodeURIComponent(link)}`);
-}
-
-function generateReferral() {
-    window.location.href = "/generate-referral";
+    
+    // Show toast
+    const toast = document.getElementById('copyToast');
+    toast.style.opacity = '1';
+    toast.style.transform = 'translate(-50%, -10px)';
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translate(-50%, 0)';
+    }, 2000);
 }
 
 function shareOnWhatsApp() {
     const link = "<%= referralLink %>";
-    window.open(`https://wa.me/?text=${encodeURIComponent(link)}`);
+    window.open(`https://wa.me/?text=${encodeURIComponent('Please support my campaign! ' + link)}`);
 }
 
-// 💥 OPEN DONATION PAGE (TRIGGERS RAZORPAY)
 function openDonation() {
     const link = "<%= referralLink %>";
     window.location.href = link;

@@ -1,0 +1,53 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          brand: {
+            50: '#f0fdfa',
+            100: '#ccfbf1',
+            500: '#14b8a6',
+            600: '#0d9488',
+            700: '#0f766e',
+            900: '#134e4a',
+          }
+        },
+        animation: {
+          'fade-in': 'fadeIn 0.5s ease-out',
+          'slide-up': 'slideUp 0.5s ease-out forwards',
+        },
+        keyframes: {
+          fadeIn: {
+            '0%': { opacity: '0' },
+            '100%': { opacity: '1' },
+          },
+          slideUp: {
+            '0%': { opacity: '0', transform: 'translateY(20px)' },
+            '100%': { opacity: '1', transform: 'translateY(0)' },
+          }
+        }
+      }
+    }
+  }
+
+  // Dark Mode Script
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+  } else {
+      document.documentElement.classList.remove('dark');
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
+  .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+  .dark .glass { background: rgba(17, 24, 39, 0.7); border: 1px solid rgba(255,255,255,0.1); }
+  .floating-label-input:focus + label, .floating-label-input:not(:placeholder-shown) + label { transform: translateY(-1.5rem) scale(0.85); color: #14b8a6; }
+</style>

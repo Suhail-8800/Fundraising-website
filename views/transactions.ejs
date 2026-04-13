@@ -2,69 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Transactions</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Transactions - Fundraiser</title>
+    <%- include('partials/header_assets') %>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- Navbar -->
     <%- include('partials/navbar') %>
 
-    <div class="max-w-6xl mx-auto p-6">
+    <div class="max-w-6xl mx-auto p-6 md:p-10 w-full animate-fade-in relative z-10 flex-1">
 
-        <h1 class="text-3xl font-bold mb-6">
-            💰 Donation History
-        </h1>
+        <div class="flex items-center gap-3 mb-8">
+            <a href="/dashboard" class="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            </a>
+            <h1 class="text-3xl font-bold dark:text-white">
+                Donation History
+            </h1>
+        </div>
 
-        <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
 
             <% if (donations.length === 0) { %>
 
-                <div class="p-6 text-center text-gray-500">
-                    No donations yet.
+                <div class="p-12 text-center text-gray-500 dark:text-gray-400">
+                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                    </div>
+                    No donations yet. Share your campaign to start receiving funds!
                 </div>
 
             <% } else { %>
 
-                <table class="w-full text-left">
-
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="p-4">Donor</th>
-                            <th class="p-4">Amount</th>
-                            <th class="p-4">Date</th>
-                            <th class="p-4">Payment ID</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <% donations.forEach(donation => { %>
-                            <tr class="border-t hover:bg-gray-50">
-
-                                <td class="p-4 font-medium">
-                                    <%= donation.donorName %>
-                                </td>
-
-                                <td class="p-4 text-green-600 font-semibold">
-                                    ₹<%= donation.donationAmount %>
-                                </td>
-
-                                <td class="p-4 text-gray-600">
-                                    <%= new Date(donation.donationDate).toLocaleDateString() %>
-                                </td>
-
-                                <td class="p-4 text-sm text-gray-500">
-                                    <%= donation.paymentId || "N/A" %>
-                                </td>
-
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            <tr>
+                                <th class="p-5 font-semibold">Donor</th>
+                                <th class="p-5 font-semibold">Amount</th>
+                                <th class="p-5 font-semibold">Date</th>
+                                <th class="p-5 font-semibold">Payment ID</th>
+                                <th class="p-5 font-semibold">Status</th>
                             </tr>
-                        <% }) %>
+                        </thead>
 
-                    </tbody>
-
-                </table>
+                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <% donations.forEach(donation => { %>
+                                <tr class="hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-colors group">
+                                    <td class="p-5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-brand-900/50 dark:to-blue-900/50 flex items-center justify-center text-blue-600 dark:text-brand-400 font-bold text-xs uppercase shadow-inner">
+                                                <%= donation.donorName.charAt(0) %>
+                                            </div>
+                                            <span class="font-medium dark:text-white"><%= donation.donorName %></span>
+                                        </div>
+                                    </td>
+                                    <td class="p-5">
+                                        <span class="text-green-600 dark:text-green-400 font-bold text-lg">₹<%= donation.donationAmount %></span>
+                                    </td>
+                                    <td class="p-5 text-gray-500 dark:text-gray-400">
+                                        <%= new Date(donation.donationDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                                    </td>
+                                    <td class="p-5">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                                                <%= donation.paymentId || "N/A" %>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="p-5">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800/50">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                            Success
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
 
             <% } %>
 

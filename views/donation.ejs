@@ -2,51 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Donate</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Make a Donation - Fundraiser</title>
+    <%- include('partials/header_assets') %>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300">
 
-    <!-- Navbar -->
     <%- include('partials/navbar') %>
 
-    <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="flex flex-1 items-center justify-center p-6 lg:p-10 relative overflow-hidden">
+        
+        <!-- Abstract Shapes -->
+        <div class="absolute top-1/4 left-1/4 w-[50%] h-[50%] rounded-full bg-brand-500/10 blur-[120px] pointer-events-none"></div>
 
-        <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <div class="glass max-w-lg w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-8 md:p-10 rounded-[2rem] shadow-2xl relative z-10 animate-slide-up border border-white/50 dark:border-gray-700/50">
 
-            <h2 class="text-2xl font-bold text-center mb-2">
-                Support This Cause ❤️
-            </h2>
-
-            <p class="text-center text-gray-500 mb-6">
-                Your contribution makes a difference
-            </p>
+            <div class="text-center mb-10">
+                <div class="w-20 h-20 bg-gradient-to-tr from-brand-400 to-blue-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-500/30 transform -rotate-6">
+                    <svg class="w-10 h-10 transform rotate-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                </div>
+                <h2 class="text-3xl font-extrabold dark:text-white tracking-tight">Support This Cause</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-2">Every contribution creates a massive impact.</p>
+            </div>
 
             <!-- Form -->
-            <form id="donationForm" class="space-y-4">
+            <form id="donationForm" class="space-y-6">
 
-                <input type="text" id="donorName" placeholder="Your Name"
-                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
+                    <input type="text" id="donorName" placeholder="Enter your full name"
+                        class="w-full bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all font-medium text-gray-900 dark:text-white placeholder-gray-400" required>
+                </div>
 
-                <input type="number" id="amount" placeholder="Amount (₹)"
-                    class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Select Amount (₹)</label>
+                    
+                    <!-- Predefined amounts -->
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <button type="button" onclick="setAmount(100)" class="py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all hover:shadow-md">₹100</button>
+                        <button type="button" onclick="setAmount(500)" class="py-3 bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 rounded-xl font-bold text-brand-600 dark:text-brand-400 hover:border-brand-500 transition-all shadow-sm">₹500</button>
+                        <button type="button" onclick="setAmount(1000)" class="py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:border-brand-500 hover:text-brand-600 transition-all hover:shadow-md">₹1000</button>
+                    </div>
 
-                <button type="button" onclick="payNow()"
-                    class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 text-lg font-semibold">
-                    💳 Donate Now
-                </button>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-5 font-bold text-gray-400 dark:text-gray-500 text-xl">₹</span>
+                        <input type="number" id="amount" placeholder="Other amount" value="500"
+                            class="w-full bg-gray-50/50 dark:bg-gray-900/50 border-2 border-gray-200 dark:border-gray-700 rounded-xl pl-10 pr-5 py-4 text-xl font-bold focus:outline-none focus:border-brand-500 focus:ring-0 transition-all text-gray-900 dark:text-white" required>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="button" onclick="payNow()"
+                        class="w-full bg-gray-900 dark:bg-brand-500 text-white py-4 rounded-xl hover:bg-gray-800 dark:hover:bg-brand-400 transition-all text-lg font-bold flex items-center justify-center gap-2 shadow-xl shadow-gray-900/20 dark:shadow-brand-500/20 transform hover:-translate-y-1">
+                        <svg class="w-5 h-5 text-brand-400 dark:text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                        Donate Securely
+                    </button>
+                </div>
 
             </form>
 
             <!-- Trust Section -->
-            <div class="mt-6 text-center text-sm text-gray-500">
-                🔒 Secure Payments powered by Razorpay
+            <div class="mt-8 flex flex-col items-center gap-3 border-t border-gray-100 dark:border-gray-700 pt-6">
+                <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    256-bit secure checkout
+                </div>
+                <div class="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+                    <span class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">Powered By</span>
+                    <span class="font-bold text-gray-800 dark:text-white text-lg">Razorpay</span>
+                </div>
             </div>
 
         </div>
 
     </div>
+
+    <!-- UI Helper Script -->
+    <script>
+        function setAmount(val) {
+            document.getElementById('amount').value = val;
+        }
+    </script>
 
     <!-- Razorpay Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -98,12 +134,13 @@
                         })
                     });
 
+                    // Modern Toast Alert
                     alert("Payment Successful 🎉");
                     window.location.reload();
                 },
 
                 theme: {
-                    color: "#2563eb"
+                    color: "#0d9488"
                 }
             };
 
