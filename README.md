@@ -1,202 +1,226 @@
-# 🚀 Fundraising Website
+# Fundraising Website
 
-A full-stack **Fundraising Platform** that allows users to create personalized donation links, track contributions, and receive payments via Razorpay.
+A professional crowdfunding platform built with Node.js, Express, MongoDB and Razorpay.
 
----
-
-## 📌 Overview
-
-This project enables users to:
-
-* Supports multi user
-* Generate a unique fundraising link
-* Share it with others (WhatsApp)
-* Accept secure payments via Razorpay
-* Track total donations and donors in a dashboard
+This project enables campaign creators to launch fundraising campaigns, share donation pages, collect secure payments, and monitor donation activity via a dashboard.
 
 ---
 
-## 🛠️ Tech Stack
+## Problem Statement
 
-### 🔹 Frontend
+Many individuals and small organizations need an easy-to-use platform to collect donations for causes, events, or campaigns without building payment and tracking workflows from scratch.
 
-* HTML
-* CSS (TailwindCSS)
-* JavaScript
-* EJS (Embedded JavaScript Templates)
+Existing tools can be expensive, difficult to manage, or lack campaign-level analytics, secure payment verification, and transparent donor history.
 
-### 🔹 Backend
+## Solution
+
+This application delivers a full-stack fundraising experience with:
+
+* User registration and session-based authentication
+* Campaign creation with unique public donation pages
+* Razorpay integration for secure Indian payments
+* Donation verification and duplicate payment protection
+* Donation history and campaign analytics
+
+---
+
+## Key Features
+
+### Campaign & Fundraising
+
+* Create fundraising campaigns with title, description, and target goal
+* Automatically generate unique slugs for public campaign pages
+* Public donation page for each active campaign
+* Track campaign progress with raised amount and donor count
+
+### Payment Workflow
+
+* Razorpay order creation for each donation
+* HMAC signature verification using secret key
+* Persistent donation records stored in MongoDB
+* Duplicate payment detection to prevent repeated recording
+
+### User Experience
+
+* Register / login with password hashing via `bcryptjs`
+* Session management with `express-session`
+* Personalized dashboard with campaign metrics
+* Transactions page showing donation history
+* Recent donor messages shown on campaign pages
+
+### Analytics & Reporting
+
+* Dashboard aggregates total donations and total donors
+* Campaign-specific analytics endpoint for daily donation summaries
+* Transaction listing for all donations across a user’s campaigns
+
+---
+
+## Tech Stack
 
 * Node.js
 * Express.js
-
-### 🔹 Database
-
-* MongoDB (MongoDB Atlas)
-
-### 🔹 Payment Gateway
-
-* Razorpay API
-
-### 🔹 Deployment (Previously)
-
-* AWS EC2 (Free Tier - Experimental)
+* MongoDB with Mongoose
+* EJS templating engine
+* Razorpay payments
+* bcryptjs for password hashing
+* express-session for authentication state
+* dotenv for environment configuration
+* body-parser for form handling
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 Fundraising-website/
-│
-├── models/
-│   └── donation.js
-│
-├── routes/
-│   ├── auth.js
-│   ├── dashboard.js
-│   ├── donations.js
-│   └── transactions.js
-│
-├── views/
-│   ├── dashboard.ejs
-│   ├── index.ejs
-│   ├── login.ejs
-│   └── register.ejs
-│
-├── public/
-│   └── (static files)
-│
 ├── app.js
 ├── package.json
-└── .env
+├── README.md
+├── .env
+├── models/
+│   ├── Campaign.js
+│   ├── donation.js
+│   └── User.js
+├── routes/
+│   ├── auth.js
+│   ├── campaigns.js
+│   ├── dashboard.js
+│   ├── donations.js
+│   ├── publicCampaign.js
+│   └── transactions.js
+├── views/
+│   ├── dashboard.ejs
+│   ├── donation.ejs
+│   ├── index.ejs
+│   ├── login.ejs
+│   ├── signup.ejs
+│   ├── transactions.ejs
+│   └── partials/
+├── public/
+│   ├── css/
+│   └── js/
+└── migrate.js
 ```
 
 ---
 
-## ⚙️ Features
+## Implementation Details
 
-### ✅ User Authentication
+### app.js
 
-* Register & Login system
-* Session-based authentication
+* Configures Express application and middleware
+* Serves static assets from `public/`
+* Uses `ejs` as the view engine
+* Loads route modules for authentication, dashboard, donations, transactions, and campaigns
+* Connects to MongoDB using `mongoose`
 
-### ✅ Dashboard
+### Models
 
-* View total donations
-* View total donors
-* Personalized referral link generation
+* `User` — stores user name, email, hashed password, and referral code
+* `Campaign` — stores user-owned campaign metadata, target amount, slug, and active status
+* `Donation` — stores donor name, amount, message, campaign reference, payment ID, and timestamp
 
-### ✅ Fundraising Link
+### Routes
 
-* Unique link per user
-* Shareable via WhatsApp
-
-### ✅ Payment Integration
-
-* Razorpay payment gateway
-* Secure payment handling
-
-### ✅ Transactions
-
-* Track all donations made through referral link
+* `routes/auth.js` — signup, login, logout, session handling
+* `routes/dashboard.js` — user dashboard with aggregated campaign stats
+* `routes/campaigns.js` — campaign creation and analytics endpoints
+* `routes/publicCampaign.js` — public donation page, order creation, and payment verification
+* `routes/donations.js` — Razorpay order generation and donation verification
+* `routes/transactions.js` — donation history listing for logged-in users
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
-Create a `.env` file in the root directory and add:
+Create a `.env` file at the project root containing:
 
-```
-MONGO_URI=your_mongodb_connection_string
-RAZORPAY_KEY_ID=your_key
-RAZORPAY_KEY_SECRET=your_secret
+```env
+MONGO_URI=<your_mongodb_connection_string>
+RAZORPAY_KEY_ID=<your_razorpay_key_id>
+RAZORPAY_KEY_SECRET=<your_razorpay_key_secret>
 BASE_URL=http://localhost:3000
-SESSION_SECRET=your_secret
+SESSION_SECRET=<your_session_secret>
 PORT=3000
 ```
 
+> `BASE_URL` is used to construct campaign share and redirect links. Adjust for production deployment.
+
 ---
 
-## 🚀 Installation & Setup
+## Installation & Run Instructions
 
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 
-```
-git clone https://github.com/Suhail-8800/Fundraising-website.git
+```bash
+git clone https://github.com/your-username/Fundraising-website.git
 cd Fundraising-website
 ```
 
-### 2️⃣ Install dependencies
+### 2. Install dependencies
 
-```
+```bash
 npm install
 ```
 
-### 3️⃣ Setup environment variables
+### 3. Create environment file
 
-Create `.env` file (see above)
+Create `.env` and add the required variables listed above.
 
-### 4️⃣ Run the application
+### 4. Start the application
 
+```bash
+npm start
 ```
-node app.js
-```
 
-### 5️⃣ Open in browser
+### 5. Open the web app
 
-```
+Visit:
+
+```text
 http://localhost:3000
 ```
 
 ---
 
-## 💳 Payment Flow
+## Usage Workflow
 
-1. User generates referral link
-2. Donor opens link
-3. Razorpay popup opens
-4. Payment is completed
-5. Donation is stored in MongoDB
-6. Dashboard updates automatically
-
----
-
-## 🌐 Deployment
-
-Previously deployed on AWS EC2 (Free Tier).
-Can be deployed on:
-
-* Render (Recommended - Free)
-* Railway
-* AWS EC2
+1. Open the app and sign up as a campaign creator
+2. Create a campaign from the dashboard with title, description, and goal amount
+3. Share the campaign URL with donors
+4. Donors use the public donation page to complete payment via Razorpay
+5. Donations are verified and stored in MongoDB
+6. View totals, recent donors, and transaction history in the dashboard
 
 ---
 
-## 🧠 Learning Outcomes
+## Future Goals
 
-* Full-stack web development
-* Payment gateway integration
-* Session-based authentication
-* Cloud deployment (AWS)
-* Debugging real-world production issues
-
----
-
-## 📌 Future Improvements
-
-* Email notifications
-* Admin panel
-* Campaign customization
-* Leaderboard for top donors
-* Analytics dashboard
+* Add email notifications and receipts for donors
+* Build an admin interface for campaign moderation
+* Add campaign categories and search filtering
+* Improve analytics with charts and exportable reports
+* Add mobile-first UI and PWA support
+* Add automated tests for routes and payment validation
 
 ---
 
-## 🤝 Contributing
+## Notes
 
-Contributions are welcome!
-Feel free to fork the repository and submit a pull request.
+* Payment signature verification is handled in `routes/publicCampaign.js`.
+* Campaign slugs are generated uniquely using title normalization and collision handling.
+* The app uses session authentication rather than JWT for simplicity and server-side security.
+
+---
+
+## Contribution
+
+Contributions are welcome. Please fork the repository, make improvements, and open a pull request.
+
+## License
+
+This project is released under the ISC License.
 
 ---
 
